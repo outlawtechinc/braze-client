@@ -151,9 +151,9 @@ class BrazeClient(object):
 
     def user_export(self, external_ids=None, email=None, fields_to_export=None):
         """
-        Export user profiles from braze. One of ``external_ids`` or ``email`` must be
-        provided. Braze allows exporting multiple user profiles through ``external_ids``
-        but only one with the ``email`` argument.
+        Export user profiles from braze. One or both of ``external_ids`` or ``email``
+        must be provided. Braze allows exporting multiple user profiles through
+        ``external_ids`` but only one with the ``email`` argument.
         ref: https://www.braze.com/docs/developer_guide/rest_api/export/
 
         :param list[str] external_ids:
@@ -168,9 +168,6 @@ class BrazeClient(object):
         """
         if external_ids is email is None:
             raise ValueError("At least one of external_ids or email must be specified")
-
-        if external_ids is not None and email is not None:
-            raise ValueError("Both external_ids and email are specified")
 
         self.request_url = self.api_url + USER_EXPORT_ENDPOINT
 

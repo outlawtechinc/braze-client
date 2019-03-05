@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 
 from braze.client import _wait_random_exp_or_rate_limit
@@ -7,6 +8,8 @@ from braze.client import BrazeInternalServerError
 from braze.client import BrazeRateLimitError
 from braze.client import MAX_RETRIES
 from braze.client import MAX_WAIT_SECONDS
+from braze.client import MESSAGE_SEND_NOW
+from braze.client import MESSAGE_SEND_SCHEDULED
 from freezegun import freeze_time
 import pytest
 from pytest import approx
@@ -192,3 +195,62 @@ class TestBrazeClient(object):
         assert braze_client.api_url + "/users/export/ids" == braze_client.request_url
         assert response["status_code"] == 201
         assert response["message"] == "success"
+
+    class TestMessageFunctions(object):
+        @pytest.fixture
+        def android_push_object(self):
+            return {
+                "alert": "A notification message",
+                "title": "Notification drawer title",
+                "extra": {"key_1": "value_1", "key_2": "value_2"},
+            }
+
+        @pytest.fixture
+        def apple_push_object(self):
+            return {
+                "body": "Text of alert message",
+                "title": "alert message title",
+                "extra": {"key_1": "value_1", "key_2": "value_2"},
+            }
+
+        @pytest.fixture
+        def messages(self, android_push_object, apple_push_object):
+            return {
+                "messages": {
+                    "apple_push_object": apple_push_object,
+                    "android_push_object": android_push_object,
+                }
+            }
+
+        class TestMessageSend(object):
+            def test_standard_case(self, braze_client, requests_mock, messages):
+                external_user_ids = [1, 2, 3, 4]
+                headers = {"Content-Type": "application/json"}
+                mock_json = {"message": "success"}
+                requests_mock.post(
+                    ANY, json=mock_json, status_code=201, headers=headers
+                )
+                response = braze_client.message_send(
+                    messages, external_user_ids=external_user_ids
+                )
+                expected_url = braze_client.api_url + MESSAGE_SEND_NOW
+                assert expected_url == braze_client.request_url
+                assert response["status_code"] == 201
+                assert response["message"] == "success"
+
+        class TestMessageScheduleCreate(object):
+            def test_standard_case(self, braze_client, requests_mock, messages):
+                external_user_ids = [1, 2, 3, 4]
+                headers = {"Content-Type": "application/json"}
+                schedule = {"time": datetime.now().isoformat()}
+                mock_json = {"message": "success"}
+                requests_mock.post(
+                    ANY, json=mock_json, status_code=201, headers=headers
+                )
+                response = braze_client.message_schedule_create(
+                    messages, external_user_ids=external_user_ids, schedule=schedule
+                )
+                expected_url = braze_client.api_url + MESSAGE_SEND_SCHEDULED
+                assert expected_url == braze_client.request_url
+                assert response["status_code"] == 201
+                assert response["message"] == "success"

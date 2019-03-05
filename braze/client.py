@@ -246,6 +246,8 @@ class BrazeClient(object):
         recipient_subscription_state=None,
     ):
         """
+        Send immediate, ad-hoc messages to designated users
+        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#send-endpoints
         :param messages:
         :param broadcast:
         :param external_user_ids:
@@ -298,6 +300,8 @@ class BrazeClient(object):
         recipient_subscription_state=None,
     ):
         """
+        Send messages at a designated time
+        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#schedule-endpoints
         :param messages:
         :param schedule:
         :param broadcast:

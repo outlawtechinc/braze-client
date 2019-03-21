@@ -9,10 +9,6 @@ DEFAULT_API_URL = "https://rest.iad-02.braze.com"
 USER_TRACK_ENDPOINT = "/users/track"
 USER_DELETE_ENDPOINT = "/users/delete"
 USER_EXPORT_ENDPOINT = "/users/export/ids"
-#: Endpoint for immediate send of Push Notifications
-MESSAGE_SEND = "/messages/send"
-#: Endpoint for scheduled send of Push Notifications
-MESSAGE_SCHEDULE_CREATE = "/messages/schedule/create"
 #: Endpoint for Trigger Campaign Sends
 CAMPAIGN_TRIGGER_SEND = "/campaigns/trigger/send"
 #: Endpoint for Scheduled Trigger Campaign Sends
@@ -235,114 +231,6 @@ class BrazeClient(object):
         elif str(r.status_code).startswith("5"):
             raise BrazeInternalServerError
         return r
-
-    def message_send(
-        self,
-        messages,
-        broadcast=None,
-        external_user_ids=None,
-        user_aliases=None,
-        audience=None,
-        segment_id=None,
-        campaign_id=None,
-        send_id=None,
-        override_frequency_capping=None,
-        recipient_subscription_state=None,
-    ):
-        """
-        Send immediate, ad-hoc messages to designated users
-        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#send-endpoints
-        :param messages:
-        :param broadcast:
-        :param external_user_ids:
-        :param user_aliases:
-        :param audience:
-        :param segment_id:
-        :param campaign_id:
-        :param send_id:
-        :param override_frequency_capping:
-        :param recipient_subscription_state:
-        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
-        """
-        self.request_url = self.api_url + MESSAGE_SEND
-
-        payload = {"messages": messages}
-
-        if broadcast is not None:
-            payload["broadcast"] = broadcast
-        if external_user_ids is not None:
-            payload["external_user_ids"] = external_user_ids
-        if user_aliases is not None:
-            payload["user_aliases"] = user_aliases
-        if audience is not None:
-            payload["audience"] = audience
-        if segment_id is not None:
-            payload["segment_id"] = segment_id
-        if campaign_id is not None:
-            payload["campaign_id"] = campaign_id
-        if send_id is not None:
-            payload["send_id"] = send_id
-        if override_frequency_capping is not None:
-            payload["override_frequency_capping"] = override_frequency_capping
-        if recipient_subscription_state is not None:
-            payload["recipient_subscription_state"] = recipient_subscription_state
-
-        return self.__create_request(payload)
-
-    def message_schedule_create(
-        self,
-        messages,
-        schedule,
-        broadcast=None,
-        external_user_ids=None,
-        user_aliases=None,
-        audience=None,
-        segment_id=None,
-        campaign_id=None,
-        send_id=None,
-        override_messaging_limits=None,
-        recipient_subscription_state=None,
-    ):
-        """
-        Send messages at a designated time
-        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#schedule-endpoints
-        :param messages:
-        :param schedule:
-        :param broadcast:
-        :param external_user_ids:
-        :param user_aliases:
-        :param audience:
-        :param segment_id:
-        :param campaign_id:
-        :param send_id:
-        :param override_messaging_limits:
-        :param recipient_subscription_state:
-        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
-        """
-        self.request_url = self.api_url + MESSAGE_SCHEDULE_CREATE
-
-        payload = {"messages": messages, "schedule": schedule}
-
-        if broadcast is not None:
-            payload["broadcast"] = broadcast
-        if external_user_ids is not None:
-            payload["external_user_ids"] = external_user_ids
-        if user_aliases is not None:
-            payload["user_aliases"] = user_aliases
-        if audience is not None:
-            payload["audience"] = audience
-        if segment_id is not None:
-            payload["segment_id"] = segment_id
-        if campaign_id is not None:
-            payload["campaign_id"] = campaign_id
-        if send_id is not None:
-            payload["send_id"] = send_id
-        if override_messaging_limits is not None:
-            payload["override_messaging_limits"] = override_messaging_limits
-        if recipient_subscription_state is not None:
-            payload["recipient_subscription_state"] = recipient_subscription_state
-
-        return self.__create_request(payload)
 
     def campaign_trigger_send(
         self, campaign_id, send_id=None, broadcast=None, audience=None, recipients=None

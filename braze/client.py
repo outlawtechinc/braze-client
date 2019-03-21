@@ -10,9 +10,13 @@ USER_TRACK_ENDPOINT = "/users/track"
 USER_DELETE_ENDPOINT = "/users/delete"
 USER_EXPORT_ENDPOINT = "/users/export/ids"
 #: Endpoint for immediate send of Push Notifications
-MESSAGE_SEND_NOW = "/messages/send"
+MESSAGE_SEND = "/messages/send"
 #: Endpoint for scheduled send of Push Notifications
-MESSAGE_SEND_SCHEDULED = "/messages/schedule/create"
+MESSAGE_SCHEDULE_CREATE = "/messages/schedule/create"
+#: Endpoint for Trigger Campaign Sends
+CAMPAIGN_TRIGGER_SEND = "/campaigns/trigger/send"
+#: Endpoint for Scheduled Trigger Campaign Sends
+CAMPAIGN_TRIGGER_SCHEDULE_CREATE = "/campaigns/trigger/schedule/create"
 MAX_RETRIES = 3
 # Max time to wait between API call retries
 MAX_WAIT_SECONDS = 1.25
@@ -258,9 +262,9 @@ class BrazeClient(object):
         :param send_id:
         :param override_frequency_capping:
         :param recipient_subscription_state:
-        :return:
+        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
         """
-        self.request_url = self.api_url + MESSAGE_SEND_NOW
+        self.request_url = self.api_url + MESSAGE_SEND
 
         payload = {"messages": messages}
 
@@ -313,9 +317,9 @@ class BrazeClient(object):
         :param send_id:
         :param override_messaging_limits:
         :param recipient_subscription_state:
-        :return:
+        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
         """
-        self.request_url = self.api_url + MESSAGE_SEND_SCHEDULED
+        self.request_url = self.api_url + MESSAGE_SCHEDULE_CREATE
 
         payload = {"messages": messages, "schedule": schedule}
 
@@ -337,5 +341,68 @@ class BrazeClient(object):
             payload["override_messaging_limits"] = override_messaging_limits
         if recipient_subscription_state is not None:
             payload["recipient_subscription_state"] = recipient_subscription_state
+
+        return self.__create_request(payload)
+
+    def campaign_trigger_send(
+        self, campaign_id, send_id=None, broadcast=None, audience=None, recipients=None
+    ):
+        """
+        Send Messages via API Triggered Delivery
+        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#sending-messages-via-api-triggered-delivery
+        :param campaign_id:
+        :param send_id:
+        :param broadcast:
+        :param audience:
+        :param recipients:
+        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
+        """
+        self.request_url = self.api_url + CAMPAIGN_TRIGGER_SEND
+
+        payload = {"campaign_id": campaign_id}
+
+        if send_id is not None:
+            payload["send_id"] = send_id
+        if broadcast is not None:
+            payload["broadcast"] = broadcast
+        if audience is not None:
+            payload["audience"] = audience
+        if recipients is not None:
+            payload["recipients"] = recipients
+
+        return self.__create_request(payload)
+
+    def campaign_trigger_schedule_create(
+        self,
+        campaign_id,
+        schedule,
+        send_id=None,
+        broadcast=None,
+        audience=None,
+        recipients=None,
+    ):
+        """
+        Send Messages via API Triggered Delivery at a specified time
+        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#schedule-endpoints
+        :param campaign_id:
+        :param schedule:
+        :param send_id:
+        :param broadcast:
+        :param audience:
+        :param recipients:
+        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
+        """
+        self.request_url = self.api_url + CAMPAIGN_TRIGGER_SCHEDULE_CREATE
+
+        payload = {"campaign_id": campaign_id, "schedule": schedule}
+
+        if send_id is not None:
+            payload["send_id"] = send_id
+        if broadcast is not None:
+            payload["broadcast"] = broadcast
+        if audience is not None:
+            payload["audience"] = audience
+        if recipients is not None:
+            payload["recipients"] = recipients
 
         return self.__create_request(payload)

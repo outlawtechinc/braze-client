@@ -1,15 +1,18 @@
 from datetime import datetime
 import time
+from uuid import uuid4
 
 from braze.client import _wait_random_exp_or_rate_limit
 from braze.client import BrazeClient
 from braze.client import BrazeClientError
 from braze.client import BrazeInternalServerError
 from braze.client import BrazeRateLimitError
+from braze.client import CAMPAIGN_TRIGGER_SCHEDULE_CREATE
+from braze.client import CAMPAIGN_TRIGGER_SEND
 from braze.client import MAX_RETRIES
 from braze.client import MAX_WAIT_SECONDS
-from braze.client import MESSAGE_SEND_NOW
-from braze.client import MESSAGE_SEND_SCHEDULED
+from braze.client import MESSAGE_SCHEDULE_CREATE
+from braze.client import MESSAGE_SEND
 from freezegun import freeze_time
 import pytest
 from pytest import approx
@@ -233,7 +236,7 @@ class TestBrazeClient(object):
                 response = braze_client.message_send(
                     messages, external_user_ids=external_user_ids
                 )
-                expected_url = braze_client.api_url + MESSAGE_SEND_NOW
+                expected_url = braze_client.api_url + MESSAGE_SEND
                 assert expected_url == braze_client.request_url
                 assert response["status_code"] == 201
                 assert response["message"] == "success"
@@ -250,7 +253,51 @@ class TestBrazeClient(object):
                 response = braze_client.message_schedule_create(
                     messages, external_user_ids=external_user_ids, schedule=schedule
                 )
-                expected_url = braze_client.api_url + MESSAGE_SEND_SCHEDULED
+                expected_url = braze_client.api_url + MESSAGE_SCHEDULE_CREATE
+                assert expected_url == braze_client.request_url
+                assert response["status_code"] == 201
+                assert response["message"] == "success"
+
+    class TestTriggeredAPICampaign(object):
+        @pytest.fixture
+        def trigger_props(self):
+            return {"key_1": "value_1", "key_2": "value_2"}
+
+        class TestCampaignTriggerSend(object):
+            def test_standard_case(self, braze_client, requests_mock, trigger_props):
+                campaign_id = str(uuid4())
+                recipients = [
+                    {"external_user_id": 1, "trigger_properties": trigger_props}
+                ]
+                headers = {"Content-Type": "application/json"}
+                mock_json = {"message": "success"}
+                requests_mock.post(
+                    ANY, json=mock_json, status_code=201, headers=headers
+                )
+                response = braze_client.campaign_trigger_send(
+                    campaign_id, recipients=recipients
+                )
+                expected_url = braze_client.api_url + CAMPAIGN_TRIGGER_SEND
+                assert expected_url == braze_client.request_url
+                assert response["status_code"] == 201
+                assert response["message"] == "success"
+
+        class TestCampaignTriggerScheduleCreate(object):
+            def test_standard_case(self, braze_client, requests_mock, trigger_props):
+                campaign_id = str(uuid4())
+                recipients = [
+                    {"external_user_id": 1, "trigger_properties": trigger_props}
+                ]
+                headers = {"Content-Type": "application/json"}
+                schedule = {"time": datetime.now().isoformat()}
+                mock_json = {"message": "success"}
+                requests_mock.post(
+                    ANY, json=mock_json, status_code=201, headers=headers
+                )
+                response = braze_client.campaign_trigger_schedule_create(
+                    campaign_id, schedule, recipients=recipients
+                )
+                expected_url = braze_client.api_url + CAMPAIGN_TRIGGER_SCHEDULE_CREATE
                 assert expected_url == braze_client.request_url
                 assert response["status_code"] == 201
                 assert response["message"] == "success"

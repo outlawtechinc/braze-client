@@ -9,6 +9,8 @@ DEFAULT_API_URL = "https://rest.iad-02.braze.com"
 USER_TRACK_ENDPOINT = "/users/track"
 USER_DELETE_ENDPOINT = "/users/delete"
 USER_EXPORT_ENDPOINT = "/users/export/ids"
+#: Endpoint for Scheduled Trigger Campaign Sends
+CAMPAIGN_TRIGGER_SCHEDULE_CREATE = "/campaigns/trigger/schedule/create"
 MAX_RETRIES = 3
 # Max time to wait between API call retries
 MAX_WAIT_SECONDS = 1.25
@@ -227,3 +229,33 @@ class BrazeClient(object):
         elif str(r.status_code).startswith("5"):
             raise BrazeInternalServerError
         return r
+
+    def campaign_trigger_schedule_create(
+        self,
+        campaign_id,
+        schedule,
+        send_id=None,
+        broadcast=None,
+        audience=None,
+        recipients=None,
+    ):
+        """
+        Send Messages via API Triggered Delivery at a specified time
+        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#schedule-endpoints
+
+        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
+        """
+        self.request_url = self.api_url + CAMPAIGN_TRIGGER_SCHEDULE_CREATE
+
+        payload = {"campaign_id": campaign_id, "schedule": schedule}
+
+        if send_id is not None:
+            payload["send_id"] = send_id
+        if broadcast is not None:
+            payload["broadcast"] = broadcast
+        if audience is not None:
+            payload["audience"] = audience
+        if recipients is not None:
+            payload["recipients"] = recipients
+
+        return self.__create_request(payload)

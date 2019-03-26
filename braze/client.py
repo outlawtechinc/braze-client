@@ -9,8 +9,6 @@ DEFAULT_API_URL = "https://rest.iad-02.braze.com"
 USER_TRACK_ENDPOINT = "/users/track"
 USER_DELETE_ENDPOINT = "/users/delete"
 USER_EXPORT_ENDPOINT = "/users/export/ids"
-#: Endpoint for Trigger Campaign Sends
-CAMPAIGN_TRIGGER_SEND = "/campaigns/trigger/send"
 #: Endpoint for Scheduled Trigger Campaign Sends
 CAMPAIGN_TRIGGER_SCHEDULE_CREATE = "/campaigns/trigger/schedule/create"
 MAX_RETRIES = 3

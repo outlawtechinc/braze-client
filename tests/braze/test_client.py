@@ -8,7 +8,6 @@ from braze.client import BrazeClientError
 from braze.client import BrazeInternalServerError
 from braze.client import BrazeRateLimitError
 from braze.client import CAMPAIGN_TRIGGER_SCHEDULE_CREATE
-from braze.client import CAMPAIGN_TRIGGER_SEND
 from braze.client import MAX_RETRIES
 from braze.client import MAX_WAIT_SECONDS
 from freezegun import freeze_time

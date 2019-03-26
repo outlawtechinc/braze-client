@@ -232,34 +232,6 @@ class BrazeClient(object):
             raise BrazeInternalServerError
         return r
 
-    def campaign_trigger_send(
-        self, campaign_id, send_id=None, broadcast=None, audience=None, recipients=None
-    ):
-        """
-        Send Messages via API Triggered Delivery
-        ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#sending-messages-via-api-triggered-delivery
-        :param campaign_id:
-        :param send_id:
-        :param broadcast:
-        :param audience:
-        :param recipients:
-        :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
-        """
-        self.request_url = self.api_url + CAMPAIGN_TRIGGER_SEND
-
-        payload = {"campaign_id": campaign_id}
-
-        if send_id is not None:
-            payload["send_id"] = send_id
-        if broadcast is not None:
-            payload["broadcast"] = broadcast
-        if audience is not None:
-            payload["audience"] = audience
-        if recipients is not None:
-            payload["recipients"] = recipients
-
-        return self.__create_request(payload)
-
     def campaign_trigger_schedule_create(
         self,
         campaign_id,
@@ -272,12 +244,7 @@ class BrazeClient(object):
         """
         Send Messages via API Triggered Delivery at a specified time
         ref: https://www.braze.com/docs/developer_guide/rest_api/messaging/#schedule-endpoints
-        :param campaign_id:
-        :param schedule:
-        :param send_id:
-        :param broadcast:
-        :param audience:
-        :param recipients:
+
         :return: json dict response, for example: {"message": "success", "errors": [], "client_error": ""}
         """
         self.request_url = self.api_url + CAMPAIGN_TRIGGER_SCHEDULE_CREATE

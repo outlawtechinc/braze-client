@@ -222,30 +222,6 @@ class TestBrazeClient(object):
         def send_id(self):
             return str(uuid4())
 
-        class TestCampaignTriggerSend(object):
-            def test_standard_case(
-                self,
-                braze_client,
-                requests_mock,
-                broadcast,
-                audience,
-                send_id,
-                campaign_id,
-                recipients,
-            ):
-                headers = {"Content-Type": "application/json"}
-                mock_json = {"message": "success"}
-                requests_mock.post(
-                    ANY, json=mock_json, status_code=201, headers=headers
-                )
-                response = braze_client.campaign_trigger_send(
-                    campaign_id, send_id, broadcast, audience, recipients
-                )
-                expected_url = braze_client.api_url + CAMPAIGN_TRIGGER_SEND
-                assert expected_url == braze_client.request_url
-                assert response["status_code"] == 201
-                assert response["message"] == "success"
-
         class TestCampaignTriggerScheduleCreate(object):
             def test_standard_case(
                 self,

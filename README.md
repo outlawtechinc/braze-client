@@ -9,8 +9,8 @@ A Python client for the Braze REST API
 Make sure you have Python 2.7.11+ installed and run:
 
 ```
-$ git clone git@github.com:hellofresh/appboy-python-client.git
-$ cd appboy-python-client
+$ git clone https://github.com/GoodRx/braze-client
+$ cd braze-client
 $ python setup.py install
 ```
 

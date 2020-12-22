@@ -67,3 +67,6 @@ target/
 .py2/
 .py3/
 
+
+# PyCharm
+.idea

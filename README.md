@@ -18,7 +18,7 @@ $ python setup.py install
 
 ```python
 from braze.client import BrazeClient
-client = BrazeClient(api_key='YOUR_API_KEY')
+client = BrazeClient(api_key='YOUR_API_KEY', use_auth_header=True)
 
 r = client.user_track(
     attributes=[{

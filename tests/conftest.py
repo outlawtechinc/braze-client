@@ -6,7 +6,7 @@ import pytest
 
 @pytest.fixture
 def braze_client():
-    return BrazeClient(api_key="API_KEY")
+    return BrazeClient(api_key="API_KEY", use_auth_header=True)
 
 
 @pytest.fixture(autouse=True)

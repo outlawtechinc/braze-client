@@ -79,6 +79,7 @@ class TestBrazeClient(object):
     def test_init(self, braze_client):
         assert braze_client.api_key == "API_KEY"
         assert braze_client.request_url == ""
+        assert braze_client.use_auth_header is True
 
     def test_user_track(
         self, braze_client, requests_mock, attributes, events, purchases
@@ -245,3 +246,23 @@ class TestBrazeClient(object):
                 assert expected_url == braze_client.request_url
                 assert response["status_code"] == 201
                 assert response["message"] == "success"
+
+    @pytest.mark.parametrize(
+        "use_auth_header",
+        [True, False],
+    )
+    def test_auth(self, requests_mock, attributes, use_auth_header):
+        braze_client = BrazeClient(api_key="API_KEY", use_auth_header=use_auth_header)
+        headers = {"Content-Type": "application/json"}
+        mock_json = {"message": "success", "errors": ""}
+        requests_mock.post(ANY, json=mock_json, status_code=200, headers=headers)
+
+        braze_client.user_track(attributes=attributes)
+        request = requests_mock.last_request
+        if use_auth_header:
+            assert "api_key" not in request.json()
+            assert "Authorization" in request.headers
+            assert request.headers["Authorization"].startswith("Bearer ")
+        else:
+            assert "api_key" in request.json()
+            assert "Authorization" not in request.headers

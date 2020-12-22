@@ -96,9 +96,10 @@ class BrazeClient(object):
         print r['errors']
     """
 
-    def __init__(self, api_key, api_url=None):
+    def __init__(self, api_key, api_url=None, use_auth_header=False):
         self.api_key = api_key
         self.api_url = api_url or DEFAULT_API_URL
+        self.use_auth_header = use_auth_header
         self.session = requests.Session()
         self.request_url = ""
 
@@ -187,7 +188,8 @@ class BrazeClient(object):
 
     def __create_request(self, payload):
 
-        payload["api_key"] = self.api_key
+        if not self.use_auth_header:
+            payload["api_key"] = self.api_key
 
         response = {"errors": []}
         r = self._post_request_with_retries(payload)
@@ -221,7 +223,18 @@ class BrazeClient(object):
         :param dict payload:
         :rtype: requests.Response
         """
-        r = self.session.post(self.request_url, json=payload, timeout=2)
+
+        headers = {}
+        # Prior to April 2020, API keys would be included as a part of the API request body or within the request URL
+        # as a parameter. Braze now has updated the way in which we read API keys. API keys are now set with the HTTP
+        # Authorization request header, making your API keys more secure.
+        # https://www.braze.com/docs/api/api_key/#how-can-i-use-it
+        if self.use_auth_header:
+            headers["Authorization"] = "Bearer {}".format(self.api_key)
+
+        r = self.session.post(
+            self.request_url, json=payload, timeout=2, headers=headers
+        )
         # https://www.braze.com/docs/developer_guide/rest_api/messaging/#fatal-errors
         if r.status_code == 429:
             reset_epoch_s = float(r.headers.get("X-RateLimit-Reset", 0))

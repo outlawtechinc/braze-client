@@ -1,15 +1,15 @@
 # braze-client
 A Python client for the Braze REST API
 
-[![Build Status](https://travis-ci.com/GoodRx/braze-client.svg?branch=master)](https://travis-ci.com/GoodRx/braze-client)
-[![Coverage](https://codecov.io/gh/GoodRx/braze-client/branch/master/graph/badge.svg)](https://codecov.io/gh/GoodRx/braze-client)
+[![Build Status](https://travis-ci.com/dtatarkin/braze-client.svg?branch=master)](https://travis-ci.com/dtatarkin/braze-client)
+[![Coverage](https://codecov.io/gh/GoodRx/dtatarkin/branch/master/graph/badge.svg)](https://codecov.io/gh/dtatarkin/braze-client)
 
 ### How to install
 
-Make sure you have Python 2.7.11+ installed and run:
+Make sure you have Python 2.7+ or 3.6+ installed and run:
 
 ```
-$ git clone https://github.com/GoodRx/braze-client
+$ git clone https://github.com/dtatarkin/braze-client
 $ cd braze-client
 $ python setup.py install
 ```

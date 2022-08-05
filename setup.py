@@ -2,13 +2,13 @@ from setuptools import find_packages
 from setuptools import setup
 
 NAME = "braze-client"
-VERSION = "2.3.1"
+VERSION = "2.3.2"
 
 REQUIRES = ["requests >=2.21.0, <3.0.0", "tenacity >=5.0.0, <6.0.0"]
 
 EXTRAS = {"dev": ["tox"]}
 
-with open("README.md", "r", encoding="utf-8") as fh:
+with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
@@ -28,6 +28,9 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
-    python_requires=">=3.6",
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2., !=3.3.*, !=3.4.*, !=3.5.*",
 )

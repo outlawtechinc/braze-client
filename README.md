@@ -2,7 +2,7 @@
 A Python client for the Braze REST API
 
 [![Build Status](https://travis-ci.com/dtatarkin/braze-client.svg?branch=master)](https://travis-ci.com/dtatarkin/braze-client)
-[![Coverage](https://codecov.io/gh/GoodRx/dtatarkin/branch/master/graph/badge.svg)](https://codecov.io/gh/dtatarkin/braze-client)
+[![Coverage](https://codecov.io/gh/dtatarkin/braze-client/branch/master/graph/badge.svg)](https://codecov.io/gh/dtatarkin/braze-client)
 
 ### How to install
 
@@ -45,6 +45,7 @@ For more examples, check `examples.py`.
 
 ### How to test
 
-To run the unit tests, make sure you have the [tox](https://tox.readthedocs.io/en/latest/) module installed and run the following from the repository root directory:
+To run the unit tests, make sure you have the [tox](https://tox.readthedocs.io/en/latest/) module installed 
+and run the following from the repository root directory:
 
 `$ tox`

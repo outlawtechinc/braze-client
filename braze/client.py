@@ -1,9 +1,8 @@
-import time
-
 import requests
 from tenacity import retry
 from tenacity import stop_after_attempt
 from tenacity import wait_random_exponential
+import time
 
 DEFAULT_API_URL = "https://rest.iad-02.braze.com"
 USER_TRACK_ENDPOINT = "/users/track"
@@ -73,7 +72,7 @@ def _wait_random_exp_or_rate_limit():
 
 class BrazeClient(object):
     """
-    Client for Appboy public API. Support user_track.
+    Client for Braze public API. Support user_track.
     usage:
      from braze.client import BrazeClient
      client = BrazeClient(api_key='Place your API key here')
@@ -96,7 +95,7 @@ class BrazeClient(object):
         print r['errors']
     """
 
-    def __init__(self, api_key, api_url=None, use_auth_header=False):
+    def __init__(self, api_key, api_url=None, use_auth_header=True):
         self.api_key = api_key
         self.api_url = api_url or DEFAULT_API_URL
         self.use_auth_header = use_auth_header

@@ -1,4 +1,11 @@
 from datetime import datetime
+from freezegun import freeze_time
+import pytest
+from pytest import approx
+from requests import RequestException
+from requests_mock import ANY
+from tenacity import Future
+from tenacity import RetryCallState
 import time
 from uuid import uuid4
 
@@ -10,13 +17,6 @@ from braze.client import BrazeRateLimitError
 from braze.client import CAMPAIGN_TRIGGER_SCHEDULE_CREATE
 from braze.client import MAX_RETRIES
 from braze.client import MAX_WAIT_SECONDS
-from freezegun import freeze_time
-import pytest
-from pytest import approx
-from requests import RequestException
-from requests_mock import ANY
-from tenacity import Future
-from tenacity import RetryCallState
 
 
 @pytest.fixture
@@ -174,7 +174,7 @@ class TestBrazeClient(object):
 
         # Ensure the correct wait time is used when rate limited
         for i in range(expected_attempts - 1):
-            assert approx(no_sleep.call_args_list[i][0], reset_delta_seconds)
+            assert no_sleep.call_args_list[i][0], approx(reset_delta_seconds)
 
     def test_user_export(self, braze_client, requests_mock):
         headers = {"Content-Type": "application/json"}

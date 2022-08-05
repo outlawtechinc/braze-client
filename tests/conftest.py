@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
-from braze.client import BrazeClient
 import pytest
+
+from braze.client import BrazeClient
 
 
 @pytest.fixture

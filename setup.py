@@ -2,9 +2,9 @@ from setuptools import find_packages
 from setuptools import setup
 
 NAME = "braze-client"
-VERSION = "2.3.3"
+VERSION = "2.3.4"
 
-REQUIRES = ["requests >=2.21.0, <3.0.0", "tenacity >=5.0.0, <6.0.0"]
+REQUIRES = ["requests >=2.21.0", "tenacity >=5.0.0"]
 
 EXTRAS = {"dev": ["tox"]}
 
@@ -31,6 +31,8 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*",
 )
